@@ -1,0 +1,9 @@
+*~
+\#*#
+moc*
+*.moc
+*.o
+*.user
+Makefile*
+lib/
+imports/

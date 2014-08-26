@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>resource/goblins-ffd.atlas</file>
+        <file>resource/goblins-ffd.json</file>
+        <file>resource/goblins-ffd.png</file>
+        <file>resource/spineboy.atlas</file>
+        <file>resource/spineboy.json</file>
+        <file>resource/spineboy.png</file>
+    </qresource>
+</RCC>

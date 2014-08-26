@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>SkeletonAnimation.qml</file>
+    </qresource>
+</RCC>
