@@ -47,12 +47,10 @@ QMAKE_EXTRA_TARGETS += copy_qmldir
 PRE_TARGETDEPS += $$copy_qmldir.target
 
 qmldir.files = qmldir
-unix {
-    installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
-    qmldir.path = $$installPath
-    target.path = $$installPath
-    INSTALLS += target qmldir
-}
+installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
+qmldir.path = $$installPath
+target.path = $$installPath
+INSTALLS += target qmldir
 
 RESOURCES += \
     resource.qrc

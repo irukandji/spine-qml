@@ -175,7 +175,11 @@ public:
     virtual ~PointSize(){}
 
     virtual void invoke(){
+#if defined(Q_OS_MAC)
         glPointSize(mSize);
+#elif defined(Q_OS_WIN) && defined(Q_CC_MINGW)
+        glPointSize(mSize);
+#endif
     }
 
 private:
