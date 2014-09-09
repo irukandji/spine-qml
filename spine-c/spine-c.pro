@@ -34,7 +34,9 @@ SOURCES += \
     src/spine/Skin.c \
     src/spine/SkinnedMeshAttachment.c \
     src/spine/Slot.c \
-    src/spine/SlotData.c
+    src/spine/SlotData.c \
+    src/spine/IkConstraint.c \
+    src/spine/IkConstraintData.c
 
 HEADERS += \
     src/spine/Json.h \
@@ -61,5 +63,7 @@ HEADERS += \
     include/spine/SkinnedMeshAttachment.h \
     include/spine/Slot.h \
     include/spine/SlotData.h \
-    include/spine/spine.h
+    include/spine/spine.h \
+    include/spine/IkConstraint.h \
+    include/spine/IkConstraintData.h
 

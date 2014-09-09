@@ -5,11 +5,11 @@ import QtQuick.Controls 1.2
 
 Window {
     visible: true
-    width: 640; height: 480;
+    width: 800; height: 480;
 
     Rectangle{
         anchors.fill: parent
-        color: Qt.rgba(0.8, 0.8, 0.8, 1.0)
+        color: Qt.rgba(0.5, 0.5, 0.5, 1.0)
     }
 
     SkeletonAnimation{
@@ -35,6 +35,13 @@ Window {
 
         states: [
             State {
+                name: "raptor"
+                StateChangeScript{
+                    id: raptorScript
+                    script: setupRaptorSkeleton()
+                }
+            },
+            State {
                 name: "spineboy"
                 StateChangeScript{
                     id: spineboyScript
@@ -52,6 +59,10 @@ Window {
 
         transitions: [
             Transition {
+                to: "raptor"
+                ScriptAction { scriptName: "raptorScript" }
+            },
+            Transition {
                 to: "spineboy"
                 ScriptAction { scriptName: "spineboyScript" }
             },
@@ -61,7 +72,19 @@ Window {
             }
         ]
 
-        state: "spineboy"
+        state: "raptor"
+    }
+
+    function setupRaptorSkeleton(){
+        skeleton.skeletonDataFile = "resource/raptor.json"
+        skeleton.atlasFile = "resource/raptor.atlas"
+        skeleton.scale = 0.4
+        skeleton.debugTracer = false
+        skeleton.skin ="default"
+
+        skeleton.setAnimation(0, "walk", true)
+        skeleton.setAnimation(1, "empty", false)
+        skeleton.setAnimation(1, "gungrab", false, 2)
     }
 
     function setupSpineboySkeleton(){
@@ -89,10 +112,14 @@ Window {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            if (skeleton.state === "spineboy"){
+            if (skeleton.state === "raptor"){
+                skeleton.debugBones = !skeleton.debugBones
+            }
+            else if (skeleton.state === "spineboy"){
                 skeleton.setAnimation(0, "jump", false)
                 skeleton.addAnimation(0, "walk", true, 0)
-            }else{
+            }
+            else{
                 skeleton.skin = skeleton.skin === "goblin"? "goblingirl" : "goblin"
             }
         }
@@ -105,6 +132,10 @@ Window {
         spacing: 10
         Button{
             id: button
+            text:"Raptor"
+            onClicked: skeleton.state = "raptor"
+        }
+        Button{
             text:"Spineboy"
             onClicked: skeleton.state = "spineboy"
         }

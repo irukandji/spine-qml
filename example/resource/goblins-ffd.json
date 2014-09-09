@@ -759,11 +759,6 @@
 		},
 		"ffd": {
 			"default": {
-				"left hand item": {
-					"spear": [
-						{ "time": 0 }
-					]
-				},
 				"right hand item": {
 					"dagger": [
 						{

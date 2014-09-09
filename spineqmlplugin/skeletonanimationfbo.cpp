@@ -340,7 +340,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
     const int* triangles = 0;
     int trianglesCount = 0;
     float r = 0, g = 0, b = 0, a = 0;
-    for (int i = 0, n = mspSkeleton->slotCount; i < n; i++) {
+    for (int i = 0, n = mspSkeleton->slotsCount; i < n; i++) {
         spSlot* slot = mspSkeleton->drawOrder[i];
         if (!slot->attachment)
             continue;
@@ -349,7 +349,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
         switch (slot->attachment->type) {
         case SP_ATTACHMENT_REGION: {
             spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-            spRegionAttachment_computeWorldVertices(attachment, slot->skeleton->x, slot->skeleton->y, slot->bone, mWorldVertices);
+            spRegionAttachment_computeWorldVertices(attachment, slot->bone, mWorldVertices);
             texture = getTexture(attachment);
             uvs = attachment->uvs;
             verticesCount = 8;
@@ -363,7 +363,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
         }
         case SP_ATTACHMENT_MESH: {
             spMeshAttachment* attachment = (spMeshAttachment*)slot->attachment;
-            spMeshAttachment_computeWorldVertices(attachment, slot->skeleton->x, slot->skeleton->y, slot, mWorldVertices);
+            spMeshAttachment_computeWorldVertices(attachment, slot, mWorldVertices);
             texture = getTexture(attachment);
             uvs = attachment->uvs;
             verticesCount = attachment->verticesCount;
@@ -377,7 +377,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
         }
         case SP_ATTACHMENT_SKINNED_MESH: {
             spSkinnedMeshAttachment* attachment = (spSkinnedMeshAttachment*)slot->attachment;
-            spSkinnedMeshAttachment_computeWorldVertices(attachment, slot->skeleton->x, slot->skeleton->y, slot, mWorldVertices);
+            spSkinnedMeshAttachment_computeWorldVertices(attachment, slot, mWorldVertices);
             texture = getTexture(attachment);
             uvs = attachment->uvs;
             verticesCount = attachment->uvsCount;
@@ -406,7 +406,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
             color.b = mspSkeleton->b * slot->b * b * multiplier;
             cache->drawTriangles(skeletonRenderer->getOpenGLTexture(texture), mWorldVertices, uvs, verticesCount, triangles, trianglesCount, color);
         }// END if (texture)
-    }// END for (int i = 0, n = skeleton->slotCount; i < n; i++)
+    }// END for (int i = 0, n = skeleton->slotsCount; i < n; i++)
     cache->cacheTriangleDrawCall();
 
     if (mDebugSlots || mDebugBones) {
@@ -417,11 +417,11 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
             cache->lineWidth(1);
 
             Point points[4];
-            for (int i = 0, n = mspSkeleton->slotCount; i < n; i++) {
+            for (int i = 0, n = mspSkeleton->slotsCount; i < n; i++) {
                 spSlot* slot = mspSkeleton->drawOrder[i];
                 if (!slot->attachment || slot->attachment->type != SP_ATTACHMENT_REGION) continue;
                 spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-                spRegionAttachment_computeWorldVertices(attachment, slot->skeleton->x, slot->skeleton->y, slot->bone, mWorldVertices);
+                spRegionAttachment_computeWorldVertices(attachment, slot->bone, mWorldVertices);
                 points[0] = Point(mWorldVertices[0], mWorldVertices[1]);
                 points[1] = Point(mWorldVertices[2], mWorldVertices[3]);
                 points[2] = Point(mWorldVertices[4], mWorldVertices[5]);
@@ -434,7 +434,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
             // Bone lengths.
             cache->lineWidth(2);
             cache->drawColor(255, 0, 0, 255);
-            for (int i = 0, n = mspSkeleton->boneCount; i < n; i++) {
+            for (int i = 0, n = mspSkeleton->bonesCount; i < n; i++) {
                 spBone *bone = mspSkeleton->bones[i];
                 float x = bone->data->length * bone->m00 + bone->worldX;
                 float y = bone->data->length * bone->m10 + bone->worldY;
@@ -443,7 +443,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
             // Bone origins.
             cache->pointSize(4.0);
             cache->drawColor(0, 0, 255, 255); // Root bone is blue.
-            for (int i = 0, n = mspSkeleton->boneCount; i < n; i++) {
+            for (int i = 0, n = mspSkeleton->bonesCount; i < n; i++) {
                 spBone *bone = mspSkeleton->bones[i];
                 cache->drawPoint(Point(bone->worldX, bone->worldY));
                 if (i == 0) cache->drawColor(0, 255, 0, 255);
@@ -566,7 +566,7 @@ QRectF SkeletonAnimationFbo::calculateSkeletonRect()
         return QRectF();
 
     float minX = FLT_MAX, minY = FLT_MAX, maxX = FLT_MIN, maxY = FLT_MIN;
-    for (int i = 0; i < mspSkeleton->slotCount; ++i) {
+    for (int i = 0; i < mspSkeleton->slotsCount; ++i) {
         spSlot* slot = mspSkeleton->slots[i];
         if (!slot->attachment)
             continue;
@@ -574,15 +574,15 @@ QRectF SkeletonAnimationFbo::calculateSkeletonRect()
         int verticesCount;
         if (slot->attachment->type == SP_ATTACHMENT_REGION) {
             spRegionAttachment* attachment = (spRegionAttachment*)slot->attachment;
-            spRegionAttachment_computeWorldVertices(attachment, slot->skeleton->x, slot->skeleton->y, slot->bone, mWorldVertices);
+            spRegionAttachment_computeWorldVertices(attachment, slot->bone, mWorldVertices);
             verticesCount = 8;
         } else if (slot->attachment->type == SP_ATTACHMENT_MESH) {
             spMeshAttachment* mesh = (spMeshAttachment*)slot->attachment;
-            spMeshAttachment_computeWorldVertices(mesh, slot->skeleton->x, slot->skeleton->y, slot, mWorldVertices);
+            spMeshAttachment_computeWorldVertices(mesh, slot, mWorldVertices);
             verticesCount = mesh->verticesCount;
         } else if (slot->attachment->type == SP_ATTACHMENT_SKINNED_MESH) {
             spSkinnedMeshAttachment* mesh = (spSkinnedMeshAttachment*)slot->attachment;
-            spSkinnedMeshAttachment_computeWorldVertices(mesh, slot->skeleton->x, slot->skeleton->y, slot, mWorldVertices);
+            spSkinnedMeshAttachment_computeWorldVertices(mesh, slot, mWorldVertices);
             verticesCount = mesh->uvsCount;
         } else
             continue;

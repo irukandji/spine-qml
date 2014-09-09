@@ -7,5 +7,8 @@
         <file>resource/spineboy.atlas</file>
         <file>resource/spineboy.json</file>
         <file>resource/spineboy.png</file>
+        <file>resource/raptor.atlas</file>
+        <file>resource/raptor.json</file>
+        <file>resource/raptor.png</file>
     </qresource>
 </RCC>
