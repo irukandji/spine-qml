@@ -3,7 +3,7 @@ TARGET = spineplugin
 QT += qml quick
 CONFIG += qt plugin no_keywords #since "slots" is used in spine-c source code. we have to use no_keywords to fix the compiling error
 
-TARGET = $$qtLibraryTarget($$TARGET)
+!ios:TARGET = $$qtLibraryTarget($$TARGET)
 uri = Spine
 
 # Input
@@ -25,7 +25,7 @@ HEADERS += \
 
 OTHER_FILES = qmldir
 
-DESTDIR = Spine
+!android:!ios:DESTDIR = Spine
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../spine-c/release/ -lspine-c
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../spine-c/debug/ -lspine-c
@@ -40,18 +40,12 @@ else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PW
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../spine-c/debug/spine-c.lib
 else:unix: PRE_TARGETDEPS += $$OUT_PWD/../spine-c/libspine-c.a
 
-copy_qmldir.target = $$OUT_PWD/$$DESTDIR/qmldir
-copy_qmldir.depends = $$_PRO_FILE_PWD_/qmldir
-copy_qmldir.commands = $(COPY_FILE) \"$$replace(copy_qmldir.depends, /, $$QMAKE_DIR_SEP)\" \"$$replace(copy_qmldir.target, /, $$QMAKE_DIR_SEP)\"
-QMAKE_EXTRA_TARGETS += copy_qmldir
-PRE_TARGETDEPS += $$copy_qmldir.target
+qml_folder.source = $$PWD/Spine
+qml_folder.target = .
+DEPLOYMENTFOLDERS += qml_folder
 
-qmldir.files = qmldir
-installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
-qmldir.path = $$installPath
-target.path = $$installPath
-INSTALLS += target qmldir
+RESOURCES += resource.qrc
 
-RESOURCES += \
-    resource.qrc
+include(../example/deployment.pri)
+qtcAddDeployment()
 

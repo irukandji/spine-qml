@@ -84,7 +84,7 @@ Window {
 
         skeleton.setAnimation(0, "walk", true)
         skeleton.setAnimation(1, "empty", false)
-        skeleton.setAnimation(1, "gungrab", false, 2)
+        skeleton.addAnimation(1, "gungrab", false, 2)
     }
 
     function setupSpineboySkeleton(){
@@ -127,7 +127,7 @@ Window {
 
     Row{
         id: row
-        anchors.bottom: parent.bottom; anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: txtRect.top; anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottomMargin: 4;
         spacing: 10
         Button{
@@ -143,20 +143,23 @@ Window {
             text:"Goblins"
             onClicked: skeleton.state = "goblins"
         }
-        Rectangle {
-            color: Qt.rgba(1, 1, 1, 0.7)
-            radius: 8
-            border.width: 1
-            border.color: "white"
-            width: txt.width + 10
-            height: button.height
+    }
+    Rectangle {
+        id: txtRect
+        color: Qt.rgba(1, 1, 1, 0.7)
+        radius: 8
+        border.width: 1
+        border.color: "white"
+        width: txt.width + 10
+        height: button.height
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 4
+        anchors.horizontalCenter: parent.horizontalCenter
+        Text{
+            id: txt
             anchors.verticalCenter: parent.verticalCenter
-            Text{
-                id: txt
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                text:"Click above to change the animation (Spineboy) or skin (Goblins). "
-            }
+            anchors.horizontalCenter: parent.horizontalCenter
+            text:"Click above to change the animation (Spineboy) or skin (Goblins). "
         }
     }
 }
