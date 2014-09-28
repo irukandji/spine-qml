@@ -404,7 +404,7 @@ void SkeletonAnimationFbo::renderToCache(Renderer* renderer, RenderCmdsCache* ca
             color.r = mspSkeleton->r * slot->r * r * multiplier;
             color.g = mspSkeleton->g * slot->g * g * multiplier;
             color.b = mspSkeleton->b * slot->b * b * multiplier;
-            cache->drawTriangles(skeletonRenderer->getOpenGLTexture(texture), mWorldVertices, uvs, verticesCount, triangles, trianglesCount, color);
+            cache->drawTriangles(skeletonRenderer->getGLTexture(texture, window()), mWorldVertices, uvs, verticesCount, triangles, trianglesCount, color);
         }// END if (texture)
     }// END for (int i = 0, n = skeleton->slotsCount; i < n; i++)
     cache->cacheTriangleDrawCall();

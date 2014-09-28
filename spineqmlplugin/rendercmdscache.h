@@ -37,7 +37,7 @@
 #include <QRectF>
 #include <QOpenGLFunctions>
 
-QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
+QT_FORWARD_DECLARE_CLASS(QSGTexture)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
 struct Point
@@ -101,7 +101,7 @@ public:
     void lineWidth(GLfloat width);
     void pointSize(GLfloat pointSize);
 
-    void drawTriangles(QOpenGLTexture* texture,
+    void drawTriangles(QSGTexture* texture,
                        const float* vertices, const float* uvs, int verticesCount,
                        const int* triangles, int trianglesCount,
                        const Color& color);
@@ -123,7 +123,7 @@ private:
     int mTrianglesCount;
     QRectF mRect;
 
-    QOpenGLTexture* mTexture;
+    QSGTexture* mTexture;
     QOpenGLShaderProgram* mTextureShaderProgram;
     QOpenGLShaderProgram* mColorShaderProgram;
 };

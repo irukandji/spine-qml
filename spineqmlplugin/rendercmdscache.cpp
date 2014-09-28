@@ -31,7 +31,7 @@
 #include "rendercmdscache.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
-#include <QOpenGLTexture>
+#include <QSGTexture>
 #include <QOpenGLShaderProgram>
 
 static const char *textureVertexShaderSource =
@@ -189,7 +189,7 @@ private:
 class DrawTrigngles: public ICachedGLFunctionCall
 {
 public:
-    explicit DrawTrigngles(QOpenGLShaderProgram* program, QOpenGLTexture* texture, Vertex* vertices, int verticesCount, GLushort* triangles, int trianglesCount)
+    explicit DrawTrigngles(QOpenGLShaderProgram* program, QSGTexture* texture, Vertex* vertices, int verticesCount, GLushort* triangles, int trianglesCount)
         :mShaderProgram(program)
         ,mTexture(texture)
         ,mVertices(0)
@@ -229,7 +229,7 @@ public:
 
 private:
     QOpenGLShaderProgram* mShaderProgram;
-    QOpenGLTexture* mTexture;
+    QSGTexture* mTexture;
     Vertex* mVertices;
     int mVerticesCount;
     GLushort* mTriangles;
@@ -373,7 +373,7 @@ void RenderCmdsCache::clear()
     mglFuncs.clear();
 }
 
-void RenderCmdsCache::drawTriangles(QOpenGLTexture* addTexture,const float* addVertices, const float* uvs, int addVerticesCount,
+void RenderCmdsCache::drawTriangles(QSGTexture* addTexture,const float* addVertices, const float* uvs, int addVerticesCount,
                        const int* addTriangles, int addTrianglesCount, const Color& color)
 {
     if (addTexture != mTexture
@@ -458,7 +458,7 @@ void RenderCmdsCache::cacheTriangleDrawCall()
 void RenderCmdsCache::render()
 {
     QOpenGLFunctions* glFuncs = QOpenGLContext::currentContext()->functions();
-    glDisable(GL_DEPTH_TEST);
+    glFuncs->glDisable(GL_DEPTH_TEST);
     glFuncs->glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glFuncs->glClear(GL_COLOR_BUFFER_BIT);
 

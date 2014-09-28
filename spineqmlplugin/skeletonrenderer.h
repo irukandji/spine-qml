@@ -32,12 +32,13 @@
 #define SKELETONRENDERER_H
 
 #include <QQuickFramebufferObject>
-#include <QOpenGLTexture>
+#include <QSGTexture>
 #include <QHash>
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLFramebufferObject)
 QT_FORWARD_DECLARE_CLASS(RenderCmdsCache)
 QT_FORWARD_DECLARE_CLASS(Texture)
+QT_FORWARD_DECLARE_CLASS(QQuickWindow)
 
 class SkeletonRenderer : public QQuickFramebufferObject::Renderer
 {
@@ -49,12 +50,12 @@ public:
     virtual void render();
     virtual void synchronize(QQuickFramebufferObject * item);
 
-    QOpenGLTexture* getOpenGLTexture(Texture*);
+    QSGTexture* getGLTexture(Texture*, QQuickWindow*);
     void releaseTextures();
 
 private:
     RenderCmdsCache* mCache;
-    QHash<QString, QOpenGLTexture*> mTextureHash;
+    QHash<QString, QSGTexture*> mTextureHash;
 };
 
 #endif // SKELETONRENDERER_H

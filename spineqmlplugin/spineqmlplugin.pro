@@ -2,7 +2,7 @@ TEMPLATE = lib
 TARGET = spineplugin
 QT += qml quick
 CONFIG += qt plugin no_keywords #since "slots" is used in spine-c source code. we have to use no_keywords to fix the compiling error
-
+ios: CONFIG += static
 !ios:TARGET = $$qtLibraryTarget($$TARGET)
 uri = Spine
 

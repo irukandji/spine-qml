@@ -33,6 +33,7 @@
 #include "rendercmdscache.h"
 #include "skeletonanimationfbo.h"
 #include "texture.h"
+#include <QQuickWindow>
 
 SkeletonRenderer::SkeletonRenderer()
 {
@@ -66,9 +67,12 @@ void SkeletonRenderer::synchronize(QQuickFramebufferObject *item)
     animation->renderToCache(this, mCache);
 }
 
-QOpenGLTexture *SkeletonRenderer::getOpenGLTexture(Texture* texture)
+QSGTexture *SkeletonRenderer::getGLTexture(Texture* texture, QQuickWindow* window)
 {
     if (!texture || texture->name().isEmpty())
+        return 0;
+
+    if (!window)
         return 0;
 
     if (mTextureHash.contains(texture->name()))
@@ -77,9 +81,9 @@ QOpenGLTexture *SkeletonRenderer::getOpenGLTexture(Texture* texture)
     if (!texture->image())
         return 0;
 
-    QOpenGLTexture* tex = new QOpenGLTexture(*texture->image());
-    tex->setMinificationFilter(QOpenGLTexture::LinearMipMapLinear);
-    tex->setMagnificationFilter(QOpenGLTexture::Linear);
+    QSGTexture* tex = window->createTextureFromImage(*texture->image());
+    tex->setFiltering(QSGTexture::Linear);
+    tex->setMipmapFiltering(QSGTexture::Linear);
     mTextureHash.insert(texture->name(), tex);
     return tex;
 }
@@ -89,7 +93,7 @@ void SkeletonRenderer::releaseTextures()
     if (mTextureHash.isEmpty())
         return;
 
-    QHashIterator<QString, QOpenGLTexture*> i(mTextureHash);
+    QHashIterator<QString, QSGTexture*> i(mTextureHash);
     while (i.hasNext()) {
         i.next();
         if (i.value())
