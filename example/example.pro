@@ -6,6 +6,9 @@ SOURCES += main.cpp
 
 RESOURCES += qml.qrc
 
+# Qt 5.5 https://forum.qt.io/topic/56353/qt-5-5-opengl-link-errors/2
+LIBS += -lopengl32 -lglu32
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
