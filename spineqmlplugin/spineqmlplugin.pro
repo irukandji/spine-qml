@@ -49,3 +49,5 @@ RESOURCES += resource.qrc
 include(../example/deployment.pri)
 qtcAddDeployment()
 
+# Qt 5.5 https://forum.qt.io/topic/56353/qt-5-5-opengl-link-errors/2
+LIBS += -lopengl32 -lglu32
